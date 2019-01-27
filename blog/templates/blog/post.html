@@ -1,0 +1,30 @@
+{% extends 'nucleo/base.html' %}
+
+{% load static %}
+
+{% block title %}Blog{% endblock %}
+
+{% block content %}
+    <br>
+    <section class="page-section cta">
+      <div class="container">
+        <div class="card">
+            {% if post.imagen %}
+                <img class="card-img-top mt-2" style="width: 50%; margin: 0 auto;" src="{{post.imagen.url}}" alt="Card image cap">
+            {% endif %}
+            <div class="card-body">
+                <h3 class="card-title text-center">{{post.titulo}}</h3>
+                <p class="card-text">{{post.contenido|linebreaks}}</p>
+                <span class="section-heading-under text-center">Publicado por {{post.autor}}.
+                    {% for categoria in post.categorias.all %}
+                      <a href="{% url 'categoria' categoria.id %}" class="link">{{categoria.nombre}}</a>{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                </span>
+                <br>
+                <a href="#" class="btn btn-primary">Comenta</a>
+                <a href="{% url 'editpost' %}" class="btn btn-primary">Comenta</a>
+            </div>
+        </div>
+      </div>
+    </section>
+{% endblock %}

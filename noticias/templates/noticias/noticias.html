@@ -1,0 +1,26 @@
+{% extends 'nucleo/base.html' %}
+
+{% load static %}
+
+{% block title %}Blog{% endblock %}
+
+{% block content %}
+    <br>
+    <section class="page-section cta">
+        <div class="container">
+            <ul class="list-group">
+                {% for noticia in noticia_list|dictsort:"id" reversed %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4>{{noticia.titulo}}</h4>
+                        </div>
+                        <div>
+                            <a href="{% url 'noticias:noticia' noticia.id %}">{{noticia.descripcion}}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div>
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'nucleo/base.html' %}
+
+{% load static %}
+
+{% block title %}Blog{% endblock %}
+
+{% block content %}
+    <br>
+    <section class="page-section cta">
+        <div class="container">
+            <ul class="list-group">
+                {% for post in posts %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4>{{post.titulo}}</h4>
+                            <span class="section-heading-upper">{{post.publicacion|date:"SHORT_DATE_FORMAT"}}</span>
+                        </div>
+                        <div>
+                            <a href="{% url 'post' post.id %}">{{post.descripcion|linebreaks}}</a>
+                            <p>Publicado por {{post.autor}}</p>
+                        </div>
+                        <span class="badge badge-primary badge-pill">{{foro.numeroPosts}}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div>
+            <a href="{% url 'addpost' %}" class="btn btn-primary btn-lg" style="color: white; margin: 0 auto;">Añadir Post</a>
+        </div>
+    </section>
+{% endblock %}

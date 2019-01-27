@@ -1,0 +1,24 @@
+{% extends 'nucleo/base.html' %}
+
+{% load static %}
+
+{% block title %}Modificar noticia{% endblock %}
+
+{% block content %}
+    <link href="{% static 'noticias/css/custom_ckeditor.css' %}" rel="stylesheet">
+    <br>
+    <section class="page-section cta">
+      <div class="container">
+        <div class="row mt-3 mb-5">
+            <div class="col-md-9 mx-auto">
+              <form action="" method="post">{% csrf_token %}
+                  {{ form.as_p }}
+                <div class="text-center">
+                  <input type="submit" class="btn btn-primary btn-block" value="Actualizar Noticia" />
+                </div>
+              </form>
+            </div>
+          </div>
+      </div>
+    </section>
+{% endblock %}
