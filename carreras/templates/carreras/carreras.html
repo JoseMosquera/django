@@ -1,0 +1,26 @@
+{% extends 'nucleo/base.html' %}
+
+{% load static %}
+
+{% block title %}Blog{% endblock %}
+
+{% block content %}
+    <br>
+    <section class="page-section cta">
+        <div class="container">
+            {% for carrera in carreras|dictsort:"id" reversed %}
+            <br>
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title text-center">{{carrera.nombre}}</h3>
+                    <p class="card-text">{{carrera.distancia}}</p>
+                    <span class="section-heading-under text-center">Publicado por {{carrera.plazas}}
+                    </span>
+                    <br>
+                    {% comment %} <a href="{% url 'editcarrera' carrera.id %}" class="btn btn-primary">Modificar</a> {% endcomment %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

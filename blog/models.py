@@ -12,9 +12,9 @@ class Foro(models.Model):
         verbose_name_plural = "foros"
         ordering = ['-created']
 
-    @property
+    @property    
     def countPosts(self):
-        count = self.post.all().count()
+        count = self.postsForo.all().count()
         return count
 
     def __str__(self):
@@ -39,8 +39,8 @@ class Post(models.Model):
     descripcion = models.TextField(verbose_name="descripcion")
     publicacion = models.DateTimeField(verbose_name="Fecha de publicacion", default=now())
     imagen = models.ImageField(verbose_name="Imagen", upload_to="blog", null=True, blank=True)
-    autor = models.ForeignKey(User, verbose_name="Autor", on_delete=models.CASCADE)
-    foro = models.ForeignKey(Foro, on_delete=models.CASCADE)
+    autor = models.ForeignKey(User, verbose_name="Autor", on_delete=models.CASCADE, null=True, blank=True)
+    foro = models.ForeignKey(Foro, on_delete=models.CASCADE, related_name="postsForo")
     categorias = models.ManyToManyField(Categoria, verbose_name="Categorias", related_name="obtener_posts")
     created = models.DateField(auto_now_add=True, verbose_name="Fecha creacion")
     updated = models.DateField(auto_now=True, verbose_name="Fecha ultima actualizacion")

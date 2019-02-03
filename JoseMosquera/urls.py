@@ -31,6 +31,9 @@ urlpatterns = [
 
     #Path de noticias
     path('noticias/', include(noticias_patterns)),
+
+    #Path de carreras
+    path('carreras/', include('carreras.urls')),
 ]
 
 if settings.DEBUG:

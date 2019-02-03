@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'nucleo',
     'blog',
     'noticias',
+    'carreras',
 ]
 
 MIDDLEWARE = [

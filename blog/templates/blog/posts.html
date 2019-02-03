@@ -5,11 +5,21 @@
 {% block title %}Blog{% endblock %}
 
 {% block content %}
+    <script>
+        function oucltarPostBox() {
+            var x = document.getElementById("postBox");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+        }
+    </script>
     <br>
     <section class="page-section cta">
         <div class="container">
             <ul class="list-group">
-                {% for post in posts %}
+                {% for post in posts|dictsort:"id" reversed %}
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <div>
                             <h4>{{post.titulo}}</h4>
@@ -23,9 +33,21 @@
                     </li>
                 {% endfor %}
             </ul>
-        </div>
-        <div>
-            <a href="{% url 'addpost' %}" class="btn btn-primary btn-lg" style="color: white; margin: 0 auto;">Añadir Post</a>
+            
+            <a onclick="oucltarPostBox()" class="btn btn-primary btn-lg" style="color: white; margin: 0 auto;">Añadir Post</a>
+
+            <br>
+
+            <div id="postBox" style="display: none;">
+                <form action="{% url 'addpost' foro_id %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{ form.as_p }}
+                    <div class="text-center">
+                        <input type="submit" class="btn btn-primary" value="Enviar">
+                    </div>
+                </form>
+            </div>
         </div>
     </section>
 {% endblock %}

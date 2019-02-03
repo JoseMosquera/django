@@ -15,7 +15,7 @@
                             <h4>{{noticia.titulo}}</h4>
                         </div>
                         <div>
-                            <a href="{% url 'noticias:noticia' noticia.id %}">{{noticia.descripcion}}</a>
+                            <a href="{% url 'noticias:noticia' noticia.id %}">{{noticia.descripcion|safe}}</a>
                     </li>
                 {% endfor %}
             </ul>

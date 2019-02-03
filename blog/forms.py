@@ -1,14 +1,32 @@
 from django import forms
+from .models import Post, Comentario
 
-class addPost(forms.Form):
-    titulo = forms.CharField(label="Titulo", required=True, widget=forms.TextInput(
-        attrs={'class':'form-control', 'placeholder':'Titulo del post'}
-    ), min_length=3, max_length=100)
+class PostForm(forms.ModelForm):
 
-    contenido = forms.CharField(label="Contenido", required=True, widget=forms.Textarea(
-        attrs={'class':'form-control', 'rows': 3, 'placeholder':'Contenido del post'}
-    ), min_length=10, max_length=1000)
+    class Meta:
+        model = Post
+        fields = ['titulo', 'contenido', 'descripcion', 'imagen', 'categorias']
+        widgets = {
+            'titulo': forms.TextInput(attrs={'class':'form-control'}),
+            'contenido': forms.Textarea(attrs={'class':'form-control'}),
+            'descripcion': forms.Textarea(attrs={'class':'form-control'}),
+            'categorias': forms.SelectMultiple(attrs={'class':'form-control'}),
+        }
 
-    descripcion = forms.CharField(label="Descripcion", required=True, widget=forms.Textarea(
-        attrs={'class':'form-control', 'rows': 3, 'placeholder':'Descripcion del post'}
-    ), min_length=10, max_length=1000)
+    # def save(self, commit=True ,*args, **kwargs):
+    #         request = None
+    #         if kwargs is not None and 'request' in kwargs:
+    #             request = kwargs.pop('request')
+    #         p = super().save(commit=False, *args, **kwargs)
+    #         if p.autor is None and request is not None:
+    #             p.autor= request.user
+    #             p.save()
+
+class ComentarioForm(forms.ModelForm):
+
+    class Meta:
+        model = Post
+        fields = ['contenido', 'imagen']
+        widgets = {
+            'contenido': forms.Textarea(attrs={'class':'form-control'}),
+        }

@@ -11,3 +11,4 @@ class NoticiaForm(forms.ModelForm):
             'contenido': forms.Textarea(attrs={'class':'form-control'}),
             'descripcion': forms.Textarea(attrs={'class':'form-control'}),
         }
+    
