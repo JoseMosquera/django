@@ -1,0 +1,34 @@
+{% extends 'nucleo/base.html' %}
+
+{% load static %}
+
+{% block title %}Contacto{% endblock %}
+
+{% load roles %}
+
+{% block content %}
+<link href="{% static 'noticias/css/custom_ckeditor.css' %}" rel="stylesheet">
+    <br>
+    <section class="page-section cta">
+      <div class="container">
+        {% if request.user|rol:'user' or request.user|rol:'staff' %}
+        {% if envio %}
+            <p class="alert alert-success">Se ha enviado su correo correctamente, si tiene alguna consulta mas por favor no dude en mandarnosla.</p>
+        {% endif %}
+        {% if error %}
+            <p class="alert alert-danger">Ha habido un error en el envio del email, por favor escriba su consulta de nuevo y asegurese de seleccionar el captcha.</p>
+        {% endif %}
+        <div class="row mt-3 mb-5">
+            <div class="col-md-9 mx-auto">
+              <form id="form" action="" method="post">{% csrf_token %}
+                  {{ form.as_p }}  
+                <div class="text-center">
+                  <input type="submit" class="btn btn-primary btn-block" value="Enviar email" />
+                </div>
+              </form>
+            </div>
+          </div>
+          {% endif %}
+      </div>
+    </section>
+{% endblock %}

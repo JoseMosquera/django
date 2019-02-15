@@ -1,11 +1,25 @@
 from django.contrib import admin
+from ckeditor.fields import RichTextField
+from django.db import models
 from .models import Foro, Post, Comentario, Categoria
+from blog.forms import ComentarioForm, PostForm
 
 class ForoAdmin(admin.ModelAdmin):
     readonly_fields = ('created', 'updated')
     ordering = ('nombre',)
     search_fields = ('nombre',)
     date_hierarchy = 'created'
+
+class ComentarioInLine(admin.StackedInline):
+    model = Comentario
+    fields = ('contenido', 'imagen', 'autor', 'publicacion')
+    readonly_fields = ('autor', 'publicacion')
+    form = ComentarioForm
+    ordering = ['-created']
+    formfield_overrides = {
+        models.TextField: {'widget': RichTextField}
+    }
+
 
 class PostAdmin(admin.ModelAdmin):
     readonly_fields = ('created', 'updated')
@@ -14,6 +28,10 @@ class PostAdmin(admin.ModelAdmin):
     search_fields = ('titulo', 'autor__username')
     date_hierarchy = 'publicacion'
     list_filter = ('autor__username', 'categorias__nombre')
+    form = PostForm
+    inlines = [
+        ComentarioInLine,
+    ]
 
 class ComentarioAdmin(admin.ModelAdmin):
     readonly_fields = ('created', 'updated')

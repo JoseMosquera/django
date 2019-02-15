@@ -39,13 +39,15 @@ class Post(models.Model):
     descripcion = models.TextField(verbose_name="descripcion")
     publicacion = models.DateTimeField(verbose_name="Fecha de publicacion", default=now())
     imagen = models.ImageField(verbose_name="Imagen", upload_to="blog", null=True, blank=True)
-    autor = models.ForeignKey(User, verbose_name="Autor", on_delete=models.CASCADE, null=True, blank=True)
+    autor = models.ForeignKey(User, verbose_name="Autor", on_delete=models.CASCADE, related_name="userPost")
     foro = models.ForeignKey(Foro, on_delete=models.CASCADE, related_name="postsForo")
     categorias = models.ManyToManyField(Categoria, verbose_name="Categorias", related_name="obtener_posts")
     created = models.DateField(auto_now_add=True, verbose_name="Fecha creacion")
     updated = models.DateField(auto_now=True, verbose_name="Fecha ultima actualizacion")
 
     class Meta:
+        verbose_name = "entrada"
+        verbose_name_plural = "entradas"
         ordering = ['-created']
 
     def __str__(self):
@@ -55,7 +57,7 @@ class Comentario(models.Model):
     contenido = models.TextField(verbose_name="Contenido")
     imagen = models.ImageField(verbose_name="Imagen", upload_to="blog", null=True, blank=True)
     autor = models.ForeignKey(User, verbose_name="Autor", on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, verbose_name="Post", on_delete=models.CASCADE)
     publicacion = models.DateTimeField(verbose_name="Fecha de publicacion", default=now())
     created = models.DateField(auto_now_add=True, verbose_name="Fecha creacion")
     updated = models.DateField(auto_now=True, verbose_name="Fecha ultima actualizacion")

@@ -7,20 +7,24 @@
 {% block content %}
     <br>
     <section class="page-section cta">
-        <div class="container">
-            <ul class="list-group">
-                {% for noticia in noticia_list|dictsort:"id" reversed %}
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <h4>{{noticia.titulo}}</h4>
-                        </div>
-                        <div>
-                            <a href="{% url 'noticias:noticia' noticia.id %}">{{noticia.descripcion|safe}}</a>
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
-        <div>
-        </div>
+       <div class="container mb-5">
+       {% if 'correcto' in request.GET %}
+            <p class="alert alert-success">Noticia creada correctamente.</p>
+        {% endif %}
+        {% for noticia in noticia_list|dictsort:"id" reversed %}
+            <a href="{% url 'noticias:noticia' noticia.id %}" style="Text-Decoration: none; color: black">
+                <div class="card">
+                    {% if noticia.imagen %}
+                        <img class="card-img-top mt-4" style="width: 25%; margin: 0 auto;" src="{{noticia.imagen.url}}" alt="Card image cap">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title text-center">{{noticia.titulo}}</h5>
+                        <p class="card-text">{{noticia.descripcion|safe}}</p>
+                    </div>
+                </div>
+            </a>
+            <br>
+        {% endfor %}
+      </div>
     </section>
 {% endblock %}

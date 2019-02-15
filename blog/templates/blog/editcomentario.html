@@ -1,0 +1,27 @@
+{% extends 'nucleo/base.html' %}
+
+{% load static %}
+
+{% block title %}Crear post{% endblock %}
+
+{% load roles %}
+
+{% block content %}
+    <br>
+    <section class="page-section cta">
+    {% if request.user|rol:'admin' %}
+        <div class="container">
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ form.as_p }}
+                <div class="text-center">
+                    <input type="submit" class="btn btn-primary" value="Enviar">
+                </div>
+            </form>
+        </div>
+    {% else %}
+        <p>No tienes acceso a esta pagina.</p>
+    {% endif %}
+    </section>
+{% endblock %}

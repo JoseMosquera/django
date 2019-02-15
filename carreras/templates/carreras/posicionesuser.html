@@ -1,0 +1,31 @@
+{% extends 'nucleo/base.html' %}
+
+{% load static %}
+
+{% block title %}Carreras{% endblock %}
+
+{% block content %}
+{% load roles %}
+    <br>
+    <section class="page-section cta">
+        <div class="container">
+            {% if posiciones %}
+                <p>No hay calificaciones aun.</p>
+            {% endif %}
+            {% for posicion in posiciones|dictsort:"id" reversed %}
+            <br>
+            {% if posicion.posicion is not None %}
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title text-center"></h3>
+                    <p class="card-text">{{posicion.carrera.nombre}}</p>
+                    <p class="card-text">{{posicion.usuario.username}}</p>
+                    <p class="card-text">{{posicion.posicion}}</p>
+                    <br>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

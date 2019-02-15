@@ -7,22 +7,34 @@
 {% block content %}
     <br>
     <section class="page-section cta">
-      <div class="container">
-        <ul class="list-group">
-            {% for post in categoria.obtener_posts.all %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <div>
-                        <h4>{{post.titulo}}</h4>
-                        <span class="section-heading-upper">{{post.publicacion|date:"SHORT_DATE_FORMAT"}}</span>
+        <div class="container">
+            {% for post in categoria.obtener_posts.all|dictsort:"id" reversed %}
+                <a href="{% url 'post' post.id %}">
+                    <div class="card">
+                        {% if post.imagen %}
+                            <img class="card-img-top mt-2" style="width: 25%; margin-left: 40%;" src="{{post.imagen.url}}" alt="Card image cap">
+                        {% endif %}
+                        <div class="card-body">
+                            <h3 class="card-title text-center">{{post.titulo}}</h3>
+                            <p class="card-text">{{post.descripcion|linebreaks}}</p>
+                            <h1>{{request.user.id}}</h1>
+                            <h1>{{post.userPost.username}}</h1>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row text-center">
+                                <div class="col-6">
+                                    <a class="text-right mt-2"><span class="text-right mt-2 section-heading-under">Publicado por {{post.autor}}. Categorias: 
+                                    {% for categoria in post.categorias.all %}
+                                    <a href="{% url 'categoria' categoria.id %}" class="link">{{categoria.nombre}}</a>{% if not forloop.last %},{% endif %}
+                                    {% endfor %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <a href="{% url 'post' post.id %}">{{post.descripcion}}</a>
-                        <p>Publicado por {{post.autor}}</p>
-                    </div>
-                    <span class="badge badge-primary badge-pill">{{foro.numeroPosts}}</span>
-                </li>
+                </a>
+                <br>
             {% endfor %}
-        </ul>
-      </div>
+        </div>
     </section>
 {% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'nucleo/base.html' %}
+
+{% load static %}
+
+{% block title %}Carreras{% endblock %}
+
+{% block content %}
+{% load roles %}
+    <br>
+    <section class="page-section cta">
+        <div class="container">
+            {% for posicion in posiciones|dictsort:"id" reversed %}
+            <br>
+            {% if posicion.posicion is not None %}
+                <p>No hay calificaciones pendientes.</p>
+            {% endif %}
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title text-center"></h3>
+                    <p class="card-text">{{posicion.carrera.nombre}}</p>
+                    <p class="card-text">{{posicion.usuario.username}}</p>
+                    <p class="card-text">{{posicion.posicion}}</p>
+                    <br>
+                    {% if request.user|rol:'admin' %}
+                        <a href="{% url 'posicion' posicion.id %}" class="btn btn-primary">Modificar</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

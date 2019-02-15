@@ -13,15 +13,6 @@ class PostForm(forms.ModelForm):
             'categorias': forms.SelectMultiple(attrs={'class':'form-control'}),
         }
 
-    # def save(self, commit=True ,*args, **kwargs):
-    #         request = None
-    #         if kwargs is not None and 'request' in kwargs:
-    #             request = kwargs.pop('request')
-    #         p = super().save(commit=False, *args, **kwargs)
-    #         if p.autor is None and request is not None:
-    #             p.autor= request.user
-    #             p.save()
-
 class ComentarioForm(forms.ModelForm):
 
     class Meta:

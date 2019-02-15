@@ -5,15 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>{% block title %}{% endblock %}</title>
     {% load static %}
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" crossorigin="anonymous"></script>
     <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
     <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script> 
+    <script type="text/javascript" src="{% static "nucleo/js/delete.js" %}"></script>
   </head>
   <body>
     <body>
+    {% load roles %}
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="{% url 'home' %}">Home</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse"
@@ -25,36 +27,62 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Noticias </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="{% url 'noticias:noticias' %}">Noticias</a>
-              <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="{% url 'noticias:addnoticia' %}">Crear</a>
-              </div>
-            </li>
-            
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Carreras </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="{% url 'carreras' %}">Carreras</a>
-              <div class="dropdown-divider"></div>
-                {% comment %} <a class="dropdown-item" href="{% url 'addcarrera' %}">Crear</a> {% endcomment %}
-              </div>
-            </li>
-            
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Entrenos </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="{% url 'entrenos' %}">Entrenos</a>
-              <div class="dropdown-divider"></div>
-                {% comment %} <a class="dropdown-item" href="{% url 'addentreno' %}">Crear</a> {% endcomment %}
-              </div>
-            </li>
+            {% if request.user|rol:'staff' or request.user|rol:'admin' %}
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Noticias </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="{% url 'noticias:noticias' %}">Noticias</a>
+                <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="{% url 'noticias:addnoticia' %}">Crear</a>
+                </div>
+              </li>
+            {% else %}
+              <li class="nav-item ">
+                <a class="nav-link -toggle" href="{% url 'noticias:noticias' %}" id="navbar" role="button" aria-haspopup="true" aria-expanded="false"> Noticias </a>
+              </li>
+            {% endif %}
+
+            {% if request.user|rol:'staff' or request.user|rol:'admin' %}
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Carreras </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="{% url 'carreras' %}">Carreras</a>
+                <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="{% url 'addcarrera' %}">Crear</a>
+                </div>
+              </li>
+            {% else %}
+              <li class="nav-item ">
+                <a class="nav-link -toggle" href="{% url 'carreras' %}" id="navbar" role="button" aria-haspopup="true" aria-expanded="false"> Carreras </a>
+              </li>
+            {% endif %}
+
+            {% if request.user|rol:'admin' %}
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Entrenos </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="{% url 'entrenos' %}">Entrenos</a>
+                <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="{% url 'addentreno' %}">Crear</a>
+                </div>
+              </li>
+            {% endif %}
+
+            {% if request.user|rol:'user' or request.user|rol:'staff' %}
+              <li class="nav-item ">
+                <a class="nav-link -toggle" href="{% url 'contacto' %}" id="navbar" role="button" aria-haspopup="true" aria-expanded="false"> Contacto </a>
+              </li>
+            {% endif %}
 
             <li class="nav-item ">
               <a class="nav-link -toggle" href="{% url 'blog' %}" id="navbar" role="button" aria-haspopup="true" aria-expanded="false"> Blog </a>
             </li>
+
+            {% if request.user|rol:'admin' %}
+              <li class="nav-item ">
+                <a class="nav-link -toggle" href="{% url 'usuarios' %}" id="navbar" role="button" aria-haspopup="true" aria-expanded="false"> Usuarios </a>
+              </li>
+            {% endif %}
           </ul>
           <ul class="navbar-nav float-right">
             <li class="nav-item dropdown navbarLogin">
@@ -64,16 +92,20 @@
                 <div class="container">
                 <a class="nav-link" id="navbarloging" href="{% url 'login' %}" role="button" aria-haspopup="true" aria-expanded="false"> Iniciar sesion </a>
                 <hr>
-                <a class="nav-link" href="{% url 'signup' %}"  id="navbarLogout" role="button" aria-haspopup="true" aria-expanded="false"> Registrarse </span></a>
+                <a class="nav-link" href="{% url 'signup' %}"  id="navbarLogout" role="button" aria-haspopup="true" aria-expanded="false"> Registrarse</a>
                 </div>
               </div>
             {% else %}
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> {{request.user}} </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="left: -100%;">
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="left: -90%;">
                 <div class="container">
-                  <a class="nav-link" href="{% url 'perfil' %}"  id="navbarLogout" role="button" aria-haspopup="true" aria-expanded="false"> Editar perfil </span></a>
+                  {% if request.user|rol:'user' %}
+                    <a class="nav-link" href="{% url 'entrenos' %}"  id="navbarLogout" role="button" aria-haspopup="true" aria-expanded="false">Mis entrenos</a>
+                    <a class="nav-link" href="{% url 'posicionesuser' %}" id="navbarLogout" role="button" aria-haspopup="true" aria-expanded="false">Clasificaciones</a>
+                  {% endif %}
+                  <a class="nav-link" href="{% url 'perfil' %}"  id="navbarLogout" role="button" aria-haspopup="true" aria-expanded="false"> Editar perfil</a>
                   <hr>
-                  <a class="nav-link" href="{% url 'logout' %}"  id="navbarLogout" role="button" aria-haspopup="true" aria-expanded="false"> Cerrar sesion </span></a>
+                  <a class="nav-link" href="{% url 'logout' %}"  id="navbarLogout" role="button" aria-haspopup="true" aria-expanded="false"> Cerrar sesion</a>
                 </div>
               </div>
             {% endif %}
@@ -83,4 +115,9 @@
       </nav>
       {% block content %}{% endblock %}
   </body>
+  <footer style="position: fixed; bottom: 0; width: 100%; background-color: #F8F9FA;">
+    <div class="text-center py-1">
+      © 2019 Copyright: Jose Manuel Mosquera Gómez
+    </div>
+  </footer>
 </html>

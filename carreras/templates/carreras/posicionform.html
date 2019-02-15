@@ -1,0 +1,27 @@
+{% extends 'nucleo/base.html' %}
+{% load static %}
+{% block title %}Crear post{% endblock %}
+{% block content %}
+{% load roles %}
+    <br>
+    <section class="page-section cta">
+        <div class="container">
+            {% if request.user|rol:'admin' %}
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{ form.as_p }}
+                    <div class="text-center">
+                        <input type="submit" class="btn btn-primary" value="Enviar">
+                    </div>
+                </form>
+            {% else %}
+                <div>
+                    <h1>No puedes pasar!!</h1>
+                    <p>Tu no tienes poder aqui, Gandalf el gris</p>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/WP3b3LFvi80" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

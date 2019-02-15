@@ -4,23 +4,33 @@
 
 {% block title %}{{noticia.titulo}}{% endblock %}
 
+{% load roles %}
+
 {% block content %}
     <br>
     <section class="page-section cta">
-      <div class="container">
+      <div class="container mb-5">
         <div class="card">
-            {% if post.imagen %}
-                <img class="card-img-top" style="width: 50%; margin: 0 auto;" src="{{noticia.imagen.url}}" alt="Card image cap">
+            {% if noticia.imagen %}
+                <img class="card-img-top mt-4" style="width: 50%; margin: 0 auto;" src="{{noticia.imagen.url}}" alt="Card image cap">
             {% endif %}
             <div class="card-body">
-                <h5 class="card-title text-center">{{noticia.titulo}}</h5>
-                <p class="card-text">{{noticia.contenido|linebreaks}}</p>
-                <br>
-                <div>
-                    <a href="{% url 'noticias:editnoticia' noticia.id %}" style="margin: 0 auto;" class="btn btn-primary">Modificar</a>
-                    <a href="{% url 'noticias:deletenoticia' noticia.id %}" class="btn btn-primary float-right">Eliminar</a>
-                </div>
+                <h3 class="card-title text-center">{{noticia.titulo}}</h3>
+                <p class="card-text">{{noticia.contenido|safe}}</p>
             </div>
+            {% if request.user|rol:'admin' or request.user|rol:'staff' %}
+                <div class="card-footer">
+                    <div class="row text-center">
+                        <div class="col-12">
+                            <a class="col-2"></a>
+                            <a href="{% url 'noticias:editnoticia' noticia.id %}" style="margin: 0 auto;" class="btn btn-primary col-3">Modificar</a>
+                            <a class="col-2"></a>
+                            <a href="{% url 'noticias:deletenoticia' noticia.id %}" class="btn btn-danger col-3">Eliminar</a>
+                            <a class="col-2"></a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
         </div>
       </div>
     </section>

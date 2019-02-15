@@ -4,21 +4,47 @@
 
 {% block title %}Blog{% endblock %}
 
+{% load roles %}
+
 {% block content %}
     <br>
     <section class="page-section cta">
-        <div class="container">
+        <div class="container mb-5">
+            {% if envio %}
+                <p class="alert alert-success">Entreno creado correctamente.</p>
+            {% endif %}
+            {% if request.user|rol:'admin' or request.user|rol:'staff' %}
+                <div style="margin-left: 42%">
+                    <form action="{% url 'entrenosUser' %}" method="post">{% csrf_token %}
+                        <select name="userEntrenos" id="userEntrenos">
+                            {% for user in usuarios|dictsort:"username" %}
+                                <option value="{{user.id}}">{{user.username}}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="submit" class="btn btn-primary" value="Enviar">
+                    </form>
+                </div>
+            {% endif %}
             {% for entreno in entrenos|dictsort:"id" reversed %}
             <br>
             <div class="card">
                 <div class="card-body">
                     <h3 class="card-title text-center">{{entreno.nombre}}</h3>
-                    <div style="margin: 0 auto;">
-                        <img class="card-img-top mt-2" style="width: 50%;" src="{{entreno.imagen.url}}" alt="Card image cap">
+                    <div style="margin-left: 20%;">
+                        <img class="card-img-top mt-2" style="width: 80%;" src="{{entreno.imagen.url}}" alt="Card image cap">
                     </div>
-                    <br>
-                    {% comment %} <a href="{% url 'editentreno' entreno.id %}" class="btn btn-primary">Modificar</a> {% endcomment %}
                 </div>
+                {% if request.user|rol:'admin' or request.user|rol:'staff' %}
+                <div class="card-footer">
+                    <div class="row">
+                        <a class="col-2"></a>
+                        <a href="{% url 'editentreno' entreno.id %}" class="btn btn-primary col-3">Modificar</a>
+                        <a class="col-2"></a>
+                        <a href="{% url 'entrenodelete' entreno.id %}" class="btn btn-danger col-3">Eliminar</a>
+                        <a class="col-2"></a>
+                    </div>
+                </div>
+                {% endif %}
             </div>
             {% endfor %}
         </div>

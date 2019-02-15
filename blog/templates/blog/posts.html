@@ -4,6 +4,8 @@
 
 {% block title %}Blog{% endblock %}
 
+{% load roles %}
+
 {% block content %}
     <script>
         function oucltarPostBox() {
@@ -13,41 +15,56 @@
             } else {
                 x.style.display = "none";
             }
+
+            var elmnt = document.getElementById("formPost");
+            elmnt.scrollIntoView();
         }
-    </script>
+    </script>   
     <br>
     <section class="page-section cta">
         <div class="container">
-            <ul class="list-group">
-                {% for post in posts|dictsort:"id" reversed %}
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <h4>{{post.titulo}}</h4>
-                            <span class="section-heading-upper">{{post.publicacion|date:"SHORT_DATE_FORMAT"}}</span>
+            {% for post in posts|dictsort:"id" reversed %}
+                <a href="{% url 'post' post.id %}" style="Text-Decoration: none; color: black">
+                    <div class="card">
+                        {% if post.imagen %}
+                            <img class="card-img-top mt-2" style="width: 25%; margin-left: 40%;" src="{{post.imagen.url}}" alt="Card image cap">
+                        {% endif %}
+                        <div class="card-body">
+                            <h3 class="card-title text-center">{{post.titulo}}</h3>
+                            <p class="card-text">{{post.descripcion|linebreaks}}</p>
                         </div>
-                        <div>
-                            <a href="{% url 'post' post.id %}">{{post.descripcion|linebreaks}}</a>
-                            <p>Publicado por {{post.autor}}</p>
+                        <div class="card-footer">
+                            <div class="row text-center">
+                                <a class="text-right col-2">Publicado por {{post.autor}}</a> 
+                                <a class="col-2">Categorias: 
+                                    {% for categoria in post.categorias.all %}
+                                        <a href="{% url 'categoria' categoria.id %}" class="link">{{categoria.nombre}}</a>{% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                </a>
+                                <a class="col-2"></a>
+                            </div>
                         </div>
-                        <span class="badge badge-primary badge-pill">{{foro.numeroPosts}}</span>
-                    </li>
-                {% endfor %}
-            </ul>
-            
-            <a onclick="oucltarPostBox()" class="btn btn-primary btn-lg" style="color: white; margin: 0 auto;">Añadir Post</a>
-
-            <br>
-
-            <div id="postBox" style="display: none;">
-                <form action="{% url 'addpost' foro_id %}" method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        {{ form.as_p }}
-                    <div class="text-center">
-                        <input type="submit" class="btn btn-primary" value="Enviar">
                     </div>
-                </form>
-            </div>
+                </a>
+                <br>
+            {% endfor %}
+            
+            {% if request.user|rol:'user' or request.user|rol:'staff' or request.user|rol:'admin' %}  
+                <a onclick="oucltarPostBox()" class="btn btn-primary btn-lg mb-5" style="color: white; margin-left: 45%;">Añadir Post</a>
+
+                <br>
+
+                <div id="postBox" style="display: none;">
+                    <form action="{% url 'addpost' foro_id %}" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group" id="formPost">
+                            {{ form.as_p }}
+                        <div class="text-center">
+                            <input type="submit" class="btn btn-primary mb-5" value="Enviar">
+                        </div>
+                    </form>
+                </div>
+            {% endif %}
         </div>
     </section>
 {% endblock %}

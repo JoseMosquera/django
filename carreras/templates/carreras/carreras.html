@@ -2,25 +2,78 @@
 
 {% load static %}
 
-{% block title %}Blog{% endblock %}
+{% block title %}Carreras{% endblock %}
 
 {% block content %}
+
+{% load roles %}
+
     <br>
     <section class="page-section cta">
         <div class="container">
-            {% for carrera in carreras|dictsort:"id" reversed %}
+            {% if envio %}
+                <p class="alert alert-success text-center">Carrera creada correctamente.</p>
+            {% endif %}
+            {% if repetido %}
+                <p class="alert alert-danger text-center">Ya estas apuntado a esa carrera.</p>
+            {% endif %}
+            {% if apuntado %}
+                <p class="alert alert-success text-center">Te has apuntado a la carrera.</p>
+            {% endif %}
+            {% if maximo %}
+                <p class="alert alert-success text-center">Esta carrera tiene todas sus plazas agotadas, lo sentimos.</p>
+            {% endif %}
+            {% if request.user|rol:'admin' %}
+                <div style="margin-left: 42%">
+                    <form action="{% url 'posiciones' %}" method="post">{% csrf_token %}
+                        <select name="userPosicion" id="userPosicion">
+                            {% for user in users|dictsort:"username" %}
+                                <option value="{{user.id}}">{{user.username}}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="submit" class="btn btn-primary" value="Enviar">
+                    </form>
+                </div>
+            {% endif %}
+
             <br>
-            <div class="card">
-                <div class="card-body">
-                    <h3 class="card-title text-center">{{carrera.nombre}}</h3>
-                    <p class="card-text">{{carrera.distancia}}</p>
-                    <span class="section-heading-under text-center">Publicado por {{carrera.plazas}}
-                    </span>
-                    <br>
-                    {% comment %} <a href="{% url 'editcarrera' carrera.id %}" class="btn btn-primary">Modificar</a> {% endcomment %}
+
+            {% for carrera in carreras|dictsort:"fecha" %}
+            <div class="row">
+                <div class="col-11" style="margin: 0 auto;">
+                    <div class="card">
+                        <div class="card-body row">
+                            <h3 class="card-title col-12 text-center">{{carrera.nombre}}</h3>
+                            <p class="card-text col-5">Distancia: {{carrera.distancia}}</p>
+                            <p class="col-4">{{carrera.fecha}}</p>
+                            <p class="section-heading-under col-3 text-center">
+                                Plazas: {{carrera.plazas}}
+                            </p>
+                            <br>
+                        </div>
+                            <div class="card-footer">
+                                <div class="row text-center">
+                                    {% if request.user|rol:'user' %}
+                                        <div style="color: white; marging: 0 auto">
+                                            <a href="{% url 'apuntarse' carrera.id %}" class="btn btn-primary">Apuntarse</a>
+                                        </div>
+                                    {% elif request.user|rol:'admin' %}
+                                        <div class="col-12" style="color: white;">
+                                            <a class="col-2"></a>
+                                            <a href="{% url 'editcarrera' carrera.id %}" class="btn btn-primary col-3">Modificar</a>
+                                            <a class="col-2"></a>
+                                            <a href="{% url 'deletecarrera' carrera.id %}" class="btn btn-danger col-3">Eliminar</a>
+                                            <a class="col-2"></a>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                    </div>
                 </div>
             </div>
+            <br>
             {% endfor %}
+            <br>
         </div>
     </section>
 {% endblock %}
