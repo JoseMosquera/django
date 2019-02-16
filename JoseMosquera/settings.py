@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'ovt!hqd6ossd3uzn58fb(+b%629l##6iwq1!(z6%4=5*mq0(dq'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -84,12 +84,8 @@ WSGI_APPLICATION = 'JoseMosquera.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'HOST': '35.205.139.124',
-        'PORT': '3306',
-        'NAME': 'finaldjango',
-        'USER': 'root',
-        'PASSWORD': 'ykmykm36'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
